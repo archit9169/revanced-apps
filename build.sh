@@ -178,7 +178,7 @@ wait
 rm -rf temp/tmp.*
 if [ -z "$(ls -A1 ${BUILD_DIR})" ]; then abort "All builds failed."; fi
 
-log "\nInstall [Microg](https://github.com/ReVanced/GmsCore/releases/latest) if using Revanced for Google Apps"
+log "\nInstall [MicroG](https://github.com/ReVanced/GmsCore/releases/latest) if using Revanced for Google Apps"
 log "\n## What's New:"
 log "$(cat $TEMP_DIR/*-rv/changelog.md)"
 
