@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
 
 # Main function to fetch release data, process it, and export the markdown content
-fetch_and_export_release_data() {
+microg_markdown_data() {
     # Fetch the latest release data from GitHub API
     local release_data
     release_data=$(curl -s https://api.github.com/repos/ReVanced/GmsCore/releases/latest)
@@ -19,7 +19,8 @@ fetch_and_export_release_data() {
     huawei_url=$(echo "$release_data" | jq -r '.assets[] | select(.name | contains("hw-signed.apk")) | .browser_download_url')
 
     # Generate the markdown content
-    GMS_CONTENT="## Install [Revanced GmsCore](https://github.com/ReVanced/GmsCore/releases/latest) for Revanced Google Apps
+    GMS_CONTENT="## MicroG >> GmsCore:
+Install [Revanced GmsCore](https://github.com/ReVanced/GmsCore/releases/latest) for using google account with revanced google apps.
 | Android Device | Download Link                      |
 | ---            | ---                                |
 | Universal      | [$release_version]($universal_url) |
@@ -30,4 +31,4 @@ fetch_and_export_release_data() {
 }
 
 # Execute the function
-fetch_and_export_release_data
+microg_markdown_data
