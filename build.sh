@@ -9,6 +9,7 @@ if [ "${1-}" = "clean" ]; then
 	exit 0
 fi
 
+source microg_release.sh
 source utils.sh
 
 vtf() { if ! isoneof "${1}" "true" "false"; then abort "ERROR: '${1}' is not a valid option for '${2}': only true or false is allowed"; fi; }
@@ -178,7 +179,7 @@ wait
 rm -rf temp/tmp.*
 if [ -z "$(ls -A1 ${BUILD_DIR})" ]; then abort "All builds failed."; fi
 
-log "\nInstall [MicroG](https://github.com/ReVanced/GmsCore/releases/latest) if using Revanced for Google Apps"
+log "\n$GMS_CONTENT"
 log "\n## What's New:"
 log "$(cat $TEMP_DIR/*-rv/changelog.md)"
 
