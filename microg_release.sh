@@ -1,4 +1,4 @@
-#!/bin/bash
+#!/usr/bin/env bash
 
 # Main function to fetch release data, process it, and export the markdown content
 fetch_and_export_release_data() {
