@@ -1,8 +1,8 @@
-YouTube-Music: 7.20.51  
 Google-Photos: 7.1.0.677535587  
-YouTube-Music-Extended: 7.16.53  
-YouTube: 19.16.39  
+YouTube-Music: 7.20.51  
 YouTube-Extended: 19.16.39  
+YouTube: 19.16.39  
+YouTube-Music-Extended: 7.16.53  
 
 ## MicroG >> GmsCore:
 Install [Revanced GmsCore](https://github.com/ReVanced/GmsCore/releases/latest) for using google account with revanced google apps.
