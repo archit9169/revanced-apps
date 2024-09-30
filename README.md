@@ -1,6 +1,5 @@
 # Revanced Apps
-[![Build](../../actions/workflows/build.yml/badge.svg?event=push)](../../actions/workflows/build.yml)
-[![CI](../../actions/workflows/ci.yml/badge.svg?event=schedule)](../../actions/workflows/ci.yml)
+[![CI](../../actions/workflows/ci.yml/badge.svg)](../../actions/workflows/ci.yml)
 
 Get the [latest release](../../releases/latest).
 
