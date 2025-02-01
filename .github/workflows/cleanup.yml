@@ -18,7 +18,7 @@ jobs:
         with:
           repository: ${{ github.repository }}
           token: ${{ secrets.GITHUB_TOKEN }}
-          retain_days: 3  # Retain workflow runs for 3 days
+          retain_days: 0  # Retain workflow runs for 3 days
           keep_minimum_runs: 3
 
       - name: Delete old releases and tags
