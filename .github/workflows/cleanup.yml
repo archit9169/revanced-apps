@@ -27,3 +27,4 @@ jobs:
           token: ${{ secrets.GITHUB_TOKEN }}
           keep-count: 3
           remove-tags: true
+          keep-old-minor-releases: false
