@@ -36,14 +36,10 @@
     <h1>Latest Release</h1>
     <div id="latest-release">Loading latest release...</div>
 
-    <h2>Older Releases</h2>
-    <div id="older-releases">
-        <p class="expandable" onclick="toggleOlderReleases()">Show older releases ▼</p>
-        <div id="older-releases-container" class="hidden"></div>
-    </div>
+    <h2 id="older-releases-header">Older Releases</h2>
+    <div id="older-releases"></div>
 
     <script>
-        // Automatically detect GitHub repo and owner from the page URL
         function getRepoDetails() {
             const parts = window.location.hostname.split(".");
             if (parts.length >= 3 && parts[1] === "github" && parts[2] === "io") {
@@ -69,6 +65,7 @@
                 .then(releases => {
                     if (!Array.isArray(releases) || releases.length === 0) {
                         document.getElementById("latest-release").innerText = "No releases found.";
+                        document.getElementById("older-releases-header").style.display = "none";
                         return;
                     }
 
@@ -78,8 +75,14 @@
 
                     // Display older releases (if any)
                     if (releases.length > 1) {
-                        const olderReleasesHTML = releases.slice(1).map(formatReleaseHTML).join("");
-                        document.getElementById("older-releases-container").innerHTML = olderReleasesHTML;
+                        const olderReleasesContainer = document.getElementById("older-releases");
+                        olderReleasesContainer.innerHTML = `
+                            <p class="expandable" onclick="toggleOlderReleases()">Show older releases ▼</p>
+                            <div id="older-releases-container" class="hidden">
+                                ${releases.slice(1).map(formatReleaseHTML).join("")}
+                            </div>`;
+                    } else {
+                        document.getElementById("older-releases").innerHTML = "<p>No older releases available.</p>";
                     }
                 })
                 .catch(error => {
@@ -88,24 +91,27 @@
         }
 
         function formatReleaseHTML(release) {
-            let releaseHTML = `<div class="release">
+            return `<div class="release">
                 <h3>${release.name || release.tag_name}</h3>
                 <p><strong>Published:</strong> ${new Date(release.published_at).toLocaleDateString()}</p>
-                <p>${release.body || "No description available."}</p>
+                <div>${renderMarkdown(release.body) || "<p>No description available.</p>"}</div>
                 <div class="assets">
                     <h4>Assets:</h4>
-                    <ul>`;
-            
-            if (release.assets.length > 0) {
-                release.assets.forEach(asset => {
-                    releaseHTML += `<li><a href="${asset.browser_download_url}" target="_blank">${asset.name}</a></li>`;
-                });
-            } else {
-                releaseHTML += "<li>No assets available.</li>";
-            }
+                    <ul>
+                        ${release.assets.length > 0 ? release.assets.map(asset => `<li><a href="${asset.browser_download_url}" target="_blank">${asset.name}</a></li>`).join("") : "<li>No assets available.</li>"}
+                    </ul>
+                </div>
+            </div>`;
+        }
 
-            releaseHTML += `</ul></div></div>`;
-            return releaseHTML;
+        function renderMarkdown(text) {
+            if (!text) return "";
+            return text
+                .replace(/</g, "&lt;").replace(/>/g, "&gt;") // Escape HTML
+                .replace(/\*\*(.*?)\*\*/g, "<strong>$1</strong>") // Bold
+                .replace(/\*(.*?)\*/g, "<em>$1</em>") // Italics
+                .replace(/\n/g, "<br>") // Line breaks
+                .replace(/\[(.*?)\]\((.*?)\)/g, '<a href="$2" target="_blank">$1</a>'); // Links
         }
 
         function toggleOlderReleases() {
@@ -121,7 +127,6 @@
             }
         }
 
-        // Fetch releases on page load
         fetchReleases();
     </script>
 
