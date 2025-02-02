@@ -1,4 +1,3 @@
-Google-Photos: 7.15.0.719957728  
 YouTube: 19.47.53  
 YouTube-Extended: 19.44.39  
 YouTube-Music: 7.29.52  
