@@ -17,6 +17,27 @@
             border: 1px solid #ddd;
             border-radius: 5px;
             background: #f9f9f9;
+            position: relative;
+        }
+        .repo-name {
+            font-size: 1.5em;
+            font-weight: bold;
+            display: inline-block;
+        }
+        .latest-tag {
+            background: #007bff;
+            color: white;
+            padding: 3px 8px;
+            font-size: 0.8em;
+            border-radius: 5px;
+            margin-left: 10px;
+        }
+        .release-date {
+            position: absolute;
+            top: 15px;
+            right: 15px;
+            font-size: 0.9em;
+            color: #555;
         }
         .assets ul {
             padding-left: 20px;
@@ -29,12 +50,28 @@
         .hidden {
             display: none;
         }
+        .markdown-content {
+            padding: 10px;
+            background: #f3f3f3;
+            border-radius: 5px;
+        }
+        .markdown-content pre {
+            background: #272822;
+            color: white;
+            padding: 10px;
+            border-radius: 5px;
+            overflow-x: auto;
+        }
+        .markdown-content code {
+            background: #f4f4f4;
+            padding: 2px 5px;
+            border-radius: 3px;
+        }
     </style>
 </head>
 <body>
 
-    <h1>Latest Release</h1>
-    <div id="latest-release">Loading latest release...</div>
+    <div id="latest-release">Loading...</div>
 
     <h2 id="older-releases-header">Older Releases</h2>
     <div id="older-releases"></div>
@@ -69,17 +106,14 @@
                         return;
                     }
 
-                    // Display latest release
                     const latest = releases[0];
-                    document.getElementById("latest-release").innerHTML = formatReleaseHTML(latest);
+                    document.getElementById("latest-release").innerHTML = formatReleaseHTML(latest, repo, true);
 
-                    // Display older releases (if any)
                     if (releases.length > 1) {
-                        const olderReleasesContainer = document.getElementById("older-releases");
-                        olderReleasesContainer.innerHTML = `
+                        document.getElementById("older-releases").innerHTML = `
                             <p class="expandable" onclick="toggleOlderReleases()">Show older releases ▼</p>
                             <div id="older-releases-container" class="hidden">
-                                ${releases.slice(1).map(formatReleaseHTML).join("")}
+                                ${releases.slice(1).map(release => formatReleaseHTML(release, repo, false)).join("")}
                             </div>`;
                     } else {
                         document.getElementById("older-releases").innerHTML = "<p>No older releases available.</p>";
@@ -90,11 +124,15 @@
                 });
         }
 
-        function formatReleaseHTML(release) {
+        function formatReleaseHTML(release, repo, isLatest) {
+            const releaseDate = new Date(release.published_at);
+            const relativeTime = getRelativeTime(releaseDate);
+            const tagHTML = isLatest ? `<span class="latest-tag">Latest Release</span>` : "";
+
             return `<div class="release">
-                <h3>${release.name || release.tag_name}</h3>
-                <p><strong>Published:</strong> ${new Date(release.published_at).toLocaleDateString()}</p>
-                <div>${renderMarkdown(release.body) || "<p>No description available.</p>"}</div>
+                <div class="repo-name">${repo}</div> ${tagHTML}
+                <span class="release-date">${releaseDate.toLocaleDateString()} (${relativeTime})</span>
+                <div class="markdown-content">${renderMarkdown(release.body) || "<p>No description available.</p>"}</div>
                 <div class="assets">
                     <h4>Assets:</h4>
                     <ul>
@@ -104,13 +142,29 @@
             </div>`;
         }
 
+        function getRelativeTime(date) {
+            const now = new Date();
+            const diff = Math.floor((now - date) / 1000);
+
+            if (diff < 60) return `${diff} sec ago`;
+            if (diff < 3600) return `${Math.floor(diff / 60)} min ago`;
+            if (diff < 86400) return `${Math.floor(diff / 3600)} hr ago`;
+            if (diff < 2592000) return `${Math.floor(diff / 86400)} days ago`;
+            return `${Math.floor(diff / 2592000)} months ago`;
+        }
+
         function renderMarkdown(text) {
             if (!text) return "";
             return text
                 .replace(/</g, "&lt;").replace(/>/g, "&gt;") // Escape HTML
+                .replace(/### (.*?)\n/g, "<h3>$1</h3>") // H3
+                .replace(/## (.*?)\n/g, "<h2>$1</h2>") // H2
+                .replace(/# (.*?)\n/g, "<h1>$1</h1>") // H1
                 .replace(/\*\*(.*?)\*\*/g, "<strong>$1</strong>") // Bold
                 .replace(/\*(.*?)\*/g, "<em>$1</em>") // Italics
                 .replace(/\n/g, "<br>") // Line breaks
+                .replace(/\`\`\`(.*?)\n([\s\S]*?)\n\`\`\`/g, '<pre>$2</pre>') // Code blocks
+                .replace(/\`([^`]+)\`/g, '<code>$1</code>') // Inline code
                 .replace(/\[(.*?)\]\((.*?)\)/g, '<a href="$2" target="_blank">$1</a>'); // Links
         }
 
