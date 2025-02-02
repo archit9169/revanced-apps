@@ -1,0 +1,129 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Releases</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            max-width: 800px;
+            margin: auto;
+            padding: 20px;
+        }
+        .release {
+            padding: 15px;
+            margin-bottom: 15px;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+            background: #f9f9f9;
+        }
+        .assets ul {
+            padding-left: 20px;
+        }
+        .expandable {
+            cursor: pointer;
+            color: blue;
+            text-decoration: underline;
+        }
+        .hidden {
+            display: none;
+        }
+    </style>
+</head>
+<body>
+
+    <h1>Latest Release</h1>
+    <div id="latest-release">Loading latest release...</div>
+
+    <h2>Older Releases</h2>
+    <div id="older-releases">
+        <p class="expandable" onclick="toggleOlderReleases()">Show older releases ▼</p>
+        <div id="older-releases-container" class="hidden"></div>
+    </div>
+
+    <script>
+        // Automatically detect GitHub repo and owner from the page URL
+        function getRepoDetails() {
+            const parts = window.location.hostname.split(".");
+            if (parts.length >= 3 && parts[1] === "github" && parts[2] === "io") {
+                const owner = parts[0];
+                const repo = window.location.pathname.split("/")[1];
+                return { owner, repo };
+            }
+            return null;
+        }
+
+        function fetchReleases() {
+            const repoDetails = getRepoDetails();
+            if (!repoDetails) {
+                document.getElementById("latest-release").innerText = "Could not determine repository details.";
+                return;
+            }
+
+            const { owner, repo } = repoDetails;
+            const apiUrl = `https://api.github.com/repos/${owner}/${repo}/releases`;
+
+            fetch(apiUrl)
+                .then(response => response.json())
+                .then(releases => {
+                    if (!Array.isArray(releases) || releases.length === 0) {
+                        document.getElementById("latest-release").innerText = "No releases found.";
+                        return;
+                    }
+
+                    // Display latest release
+                    const latest = releases[0];
+                    document.getElementById("latest-release").innerHTML = formatReleaseHTML(latest);
+
+                    // Display older releases (if any)
+                    if (releases.length > 1) {
+                        const olderReleasesHTML = releases.slice(1).map(formatReleaseHTML).join("");
+                        document.getElementById("older-releases-container").innerHTML = olderReleasesHTML;
+                    }
+                })
+                .catch(error => {
+                    document.getElementById("latest-release").innerText = "Failed to load releases.";
+                });
+        }
+
+        function formatReleaseHTML(release) {
+            let releaseHTML = `<div class="release">
+                <h3>${release.name || release.tag_name}</h3>
+                <p><strong>Published:</strong> ${new Date(release.published_at).toLocaleDateString()}</p>
+                <p>${release.body || "No description available."}</p>
+                <div class="assets">
+                    <h4>Assets:</h4>
+                    <ul>`;
+            
+            if (release.assets.length > 0) {
+                release.assets.forEach(asset => {
+                    releaseHTML += `<li><a href="${asset.browser_download_url}" target="_blank">${asset.name}</a></li>`;
+                });
+            } else {
+                releaseHTML += "<li>No assets available.</li>";
+            }
+
+            releaseHTML += `</ul></div></div>`;
+            return releaseHTML;
+        }
+
+        function toggleOlderReleases() {
+            const container = document.getElementById("older-releases-container");
+            const toggleText = document.querySelector(".expandable");
+
+            if (container.classList.contains("hidden")) {
+                container.classList.remove("hidden");
+                toggleText.innerText = "Hide older releases ▲";
+            } else {
+                container.classList.add("hidden");
+                toggleText.innerText = "Show older releases ▼";
+            }
+        }
+
+        // Fetch releases on page load
+        fetchReleases();
+    </script>
+
+</body>
+</html>
