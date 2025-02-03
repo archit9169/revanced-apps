@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Releases</title>
+    <title>ReVanced Apps</title>
     <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/date-fns@latest"></script>
     <style>
@@ -12,7 +12,6 @@
             max-width: 800px;
             margin: auto;
             padding: 20px;
-            background-color: #ffffff;
         }
 
         .repo-name {
@@ -30,7 +29,6 @@
         }
 
         .release-container {
-            background-color: #ffffff;
             padding: 20px;
             border-radius: 10px;
         }
@@ -40,12 +38,12 @@
             margin-bottom: 15px;
             border: 1px solid #ddd;
             border-radius: 5px;
+            background: #f1f1f1;
         }
 
         .release-date {
             font-size: 0.9em;
             color: #555;
-            background: #f1f1f1;
             padding: 5px 10px;
             border-radius: 5px;
             display: inline-block;
@@ -54,12 +52,23 @@
 
         .markdown-content {
             padding: 10px;
-            background: #f1f1f1;
             border-radius: 5px;
         }
 
+        .markdown-content table {
+            border-collapse: collapse;
+            margin: 10px 0;
+            font-size: 16px;
+        }
+        
+        .markdown-content th, 
+        .markdown-content td {
+            border: 2px solid #ddd; /* Adjust border thickness */
+            padding: 8px 12px; /* Adds padding for neat spacing */
+            text-align: left;
+        }
+
         .assets {
-            background: #f1f1f1;
             padding: 10px;
             border-radius: 5px;
             margin-top: 10px;
