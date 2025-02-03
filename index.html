@@ -14,18 +14,11 @@
             padding: 20px;
         }
 
-        .repo-name {
-            text-align: center;
-            font-size: 2em;
-            font-weight: bold;
-            text-transform: uppercase;
-            margin-bottom: 20px;
-        }
-
         .release-header {
             font-size: 1.5em;
             font-weight: bold;
             margin: 20px 0;
+            text-align: center;
         }
 
         .release-container {
@@ -81,10 +74,9 @@
         .expandable {
             cursor: pointer;
             color: blue;
-            text-decoration: underline;
             font-weight: bold;
-            margin-top: 10px;
-            display: block;
+            display: inline-block;
+            margin-left: 10px;
         }
 
         .hidden {
@@ -94,13 +86,13 @@
 </head>
 <body>
 
-    <div class="repo-name" id="repo-title">Loading...</div>
-
     <div class="release-container">
         <h2 class="release-header">Latest Release</h2>
         <div id="latest-release">Loading...</div>
 
-        <h2 class="release-header">Older Releases</h2>
+        <h2 class="release-header">Older Releases 
+            <span class="expandable" onclick="toggleOlderReleases()">▼</span>
+        </h2>
         <div id="older-releases"></div>
     </div>
 
@@ -117,12 +109,7 @@
 
         function fetchReleases() {
             const repoDetails = getRepoDetails();
-            if (!repoDetails) {
-                document.getElementById("repo-title").innerText = "Unknown Repository";
-                return;
-            }
-
-            document.getElementById("repo-title").innerText = repoDetails.repo;
+            if (!repoDetails) return;
 
             fetch(`https://api.github.com/repos/${repoDetails.owner}/${repoDetails.repo}/releases`)
                 .then(response => response.json())
@@ -136,7 +123,6 @@
 
                     if (releases.length > 1) {
                         document.getElementById("older-releases").innerHTML = `
-                            <span class="expandable" onclick="toggleOlderReleases()">Show older releases ▼</span>
                             <div id="older-releases-container" class="hidden">
                                 ${releases.slice(1).map(formatReleaseHTML).join("")}
                             </div>`;
@@ -171,10 +157,10 @@
 
             if (container.classList.contains("hidden")) {
                 container.classList.remove("hidden");
-                toggleText.innerText = "Hide older releases ▲";
+                toggleText.innerText = "▲";
             } else {
                 container.classList.add("hidden");
-                toggleText.innerText = "Show older releases ▼";
+                toggleText.innerText = "▼";
             }
         }
 
