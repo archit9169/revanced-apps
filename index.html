@@ -4,57 +4,59 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Releases</title>
+    <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/date-fns@latest"></script>
     <style>
         body {
             font-family: Arial, sans-serif;
             max-width: 800px;
             margin: auto;
             padding: 20px;
+            background-color: #ffffff;
         }
+
+        .repo-name {
+            text-align: center;
+            font-size: 2em;
+            font-weight: bold;
+            text-transform: uppercase;
+            margin-bottom: 20px;
+        }
+
+        .release-container {
+            background-color: #f9f9f9;
+            padding: 20px;
+            border-radius: 10px;
+        }
+
         .release {
             padding: 15px;
             margin-bottom: 15px;
             border: 1px solid #ddd;
             border-radius: 5px;
-            background: #f9f9f9;
-            position: relative;
         }
-        .repo-name {
-            font-size: 1.5em;
+
+        .release-header {
+            font-size: 1.2em;
             font-weight: bold;
-            display: inline-block;
+            margin: 10px 0;
         }
-        .latest-tag {
-            background: #007bff;
-            color: white;
-            padding: 3px 8px;
-            font-size: 0.8em;
-            border-radius: 5px;
-            margin-left: 10px;
-        }
+
         .release-date {
-            position: absolute;
-            top: 15px;
-            right: 15px;
             font-size: 0.9em;
             color: #555;
         }
+
         .assets ul {
             padding-left: 20px;
         }
-        .expandable {
-            cursor: pointer;
-            color: blue;
-            text-decoration: underline;
-        }
-        .hidden {
-            display: none;
-        }
+
         .markdown-content {
             padding: 10px;
             background: #f3f3f3;
             border-radius: 5px;
         }
+
         .markdown-content pre {
             background: #272822;
             color: white;
@@ -62,43 +64,35 @@
             border-radius: 5px;
             overflow-x: auto;
         }
+
         .markdown-content code {
             background: #f4f4f4;
             padding: 2px 5px;
             border-radius: 3px;
         }
-        .markdown-content table {
-            width: 100%;
-            border-collapse: collapse;
-            margin: 10px 0;
-            font-size: 16px;
+
+        .expandable {
+            cursor: pointer;
+            color: blue;
+            text-decoration: underline;
         }
-        
-        .markdown-content th, 
-        .markdown-content td {
-            border: 2px solid #ddd; /* Adjust border thickness */
-            padding: 8px 12px; /* Adds padding for neat spacing */
-            text-align: left;
-        }
-        
-        .markdown-content th {
-            background-color: #f4f4f4;
-            font-weight: bold;
+
+        .hidden {
+            display: none;
         }
     </style>
 </head>
 <body>
 
-    <div id="latest-release">Loading...</div>
+    <div class="repo-name" id="repo-title">Loading...</div>
 
-    <h2 id="older-releases-header">Older Releases</h2>
-    <div id="older-releases"></div>
+    <div class="release-container">
+        <h2 class="release-header">Latest Release</h2>
+        <div id="latest-release">Loading...</div>
 
-    <!-- Load Marked.js for Markdown Parsing -->
-    <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
-
-    <!-- Load date-fns for Relative Time Formatting -->
-    <script src="https://cdn.jsdelivr.net/npm/date-fns@latest"></script>
+        <h2 id="older-releases-header">Older Releases</h2>
+        <div id="older-releases"></div>
+    </div>
 
     <script>
         function getRepoDetails() {
@@ -114,14 +108,13 @@
         function fetchReleases() {
             const repoDetails = getRepoDetails();
             if (!repoDetails) {
-                document.getElementById("latest-release").innerText = "Could not determine repository details.";
+                document.getElementById("repo-title").innerText = "Unknown Repository";
                 return;
             }
 
-            const { owner, repo } = repoDetails;
-            const apiUrl = `https://api.github.com/repos/${owner}/${repo}/releases`;
+            document.getElementById("repo-title").innerText = repoDetails.repo;
 
-            fetch(apiUrl)
+            fetch(`https://api.github.com/repos/${repoDetails.owner}/${repoDetails.repo}/releases`)
                 .then(response => response.json())
                 .then(releases => {
                     if (!Array.isArray(releases) || releases.length === 0) {
@@ -130,14 +123,13 @@
                         return;
                     }
 
-                    const latest = releases[0];
-                    document.getElementById("latest-release").innerHTML = formatReleaseHTML(latest, repo, true);
+                    document.getElementById("latest-release").innerHTML = formatReleaseHTML(releases[0]);
 
                     if (releases.length > 1) {
                         document.getElementById("older-releases").innerHTML = `
                             <p class="expandable" onclick="toggleOlderReleases()">Show older releases ▼</p>
                             <div id="older-releases-container" class="hidden">
-                                ${releases.slice(1).map(release => formatReleaseHTML(release, repo, false)).join("")}
+                                ${releases.slice(1).map(formatReleaseHTML).join("")}
                             </div>`;
                     } else {
                         document.getElementById("older-releases").innerHTML = "<p>No older releases available.</p>";
@@ -148,14 +140,10 @@
                 });
         }
 
-        function formatReleaseHTML(release, repo, isLatest) {
-            const releaseDate = new Date(release.published_at);
-            const tagHTML = isLatest ? `<span class="latest-tag">Latest Release</span>` : "";
-
+        function formatReleaseHTML(release) {
             return `<div class="release">
-                <div class="repo-name">${repo}</div> ${tagHTML}
-                <span class="release-date">${releaseDate.toLocaleDateString()} (${dateFns.formatDistanceToNow(releaseDate, { addSuffix: true })})</span>
-                <div class="markdown-content">${marked.parse(release.body) || "<p>No description available.</p>"}</div>
+                <span class="release-date">${dateFns.formatDistanceToNow(new Date(release.published_at), { addSuffix: true })}</span>
+                <div class="markdown-content">${marked.parse(release.body || "No description available.")}</div>
                 <div class="assets">
                     <h4>Assets:</h4>
                     <ul>
