@@ -1,0 +1,73 @@
+body {
+    font-family: Arial, sans-serif;
+    max-width: 800px;
+    margin: auto;
+    padding: 20px;
+    background-color: #ffffff;
+}
+
+.repo-name {
+    text-align: center;
+    font-size: 2em;
+    font-weight: bold;
+    text-transform: uppercase;
+    margin-bottom: 20px;
+}
+
+.release-container {
+    background-color: #f9f9f9;
+    padding: 20px;
+    border-radius: 10px;
+}
+
+.release {
+    padding: 15px;
+    margin-bottom: 15px;
+    border: 1px solid #ddd;
+    border-radius: 5px;
+}
+
+.release-header {
+    font-size: 1.2em;
+    font-weight: bold;
+    margin: 10px 0;
+}
+
+.release-date {
+    font-size: 0.9em;
+    color: #555;
+}
+
+.assets ul {
+    padding-left: 20px;
+}
+
+.markdown-content {
+    padding: 10px;
+    background: #f3f3f3;
+    border-radius: 5px;
+}
+
+.markdown-content pre {
+    background: #272822;
+    color: white;
+    padding: 10px;
+    border-radius: 5px;
+    overflow-x: auto;
+}
+
+.markdown-content code {
+    background: #f4f4f4;
+    padding: 2px 5px;
+    border-radius: 3px;
+}
+
+.expandable {
+    cursor: pointer;
+    color: blue;
+    text-decoration: underline;
+}
+
+.hidden {
+    display: none;
+}
