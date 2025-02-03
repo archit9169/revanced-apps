@@ -25,7 +25,6 @@ uptodown-dlurl = "https://youtube-music.en.uptodown.com/android"
 [Google-Photos]
 app-name = "Photos"
 rv-brand = "ReVanced"
-arch = "arm64-v8a"
 apkmirror-dlurl = "https://www.apkmirror.com/apk/google-inc/photos/"
 uptodown-dlurl = "https://google-photos.en.uptodown.com/android"
 
