@@ -1,0 +1,171 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ReVanced Apps</title>
+    <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/date-fns@latest"></script>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            max-width: 800px;
+            margin: auto;
+            padding: 20px;
+        }
+
+        .release-header {
+            font-size: 1.5em;
+            font-weight: bold;
+            margin: 20px 0;
+            text-align: center;
+        }
+
+        .release-container {
+            padding: 20px;
+            border-radius: 10px;
+        }
+
+        .release {
+            padding: 15px;
+            margin-bottom: 15px;
+            border: 1px solid;
+            border-radius: 5px;
+            background: #f9f9f9;
+        }
+
+        .release-date {
+            font-size: 0.9em;
+            color: #555;
+            padding: 5px 10px;
+            border-radius: 5px;
+            display: inline-block;
+            margin-bottom: 10px;
+        }
+
+        .markdown-content {
+            padding: 10px;
+            border-radius: 5px;
+        }
+
+        .markdown-content table {
+            border-collapse: collapse;
+            margin: 10px 0;
+            font-size: 16px;
+        }
+
+        .markdown-content th, 
+        .markdown-content td {
+            border: 2px solid;
+            padding: 8px 12px;
+            text-align: left;
+        }
+
+        .assets {
+            padding: 10px;
+            border-radius: 5px;
+            margin-top: 10px;
+        }
+
+        .assets ul {
+            padding-left: 20px;
+        }
+
+        .expandable {
+            cursor: pointer;
+            color: blue;
+            font-weight: bold;
+            display: inline-block;
+            margin-left: 10px;
+        }
+
+        .hidden {
+            display: none;
+        }
+    </style>
+</head>
+<body>
+
+    <div class="release-container">
+        <h2 class="release-header">Latest Release</h2>
+        <div id="latest-release">Loading...</div>
+
+        <h2 class="release-header">Older Releases 
+            <span class="expandable" onclick="toggleOlderReleases()">▼</span>
+        </h2>
+        <div id="older-releases"></div>
+    </div>
+
+    <script>
+        function getRepoDetails() {
+            const parts = window.location.hostname.split(".");
+            if (parts.length >= 3 && parts[1] === "github" && parts[2] === "io") {
+                const owner = parts[0];
+                const repo = window.location.pathname.split("/")[1];
+                return { owner, repo };
+            }
+            return null;
+        }
+
+        function fetchReleases() {
+            const repoDetails = getRepoDetails();
+            if (!repoDetails) return;
+
+            fetch(`https://api.github.com/repos/${repoDetails.owner}/${repoDetails.repo}/releases`)
+                .then(response => response.json())
+                .then(releases => {
+                    if (!Array.isArray(releases) || releases.length === 0) {
+                        document.getElementById("latest-release").innerText = "No releases found.";
+                        return;
+                    }
+
+                    document.getElementById("latest-release").innerHTML = formatReleaseHTML(releases[0]);
+
+                    if (releases.length > 1) {
+                        document.getElementById("older-releases").innerHTML = `
+                            <div id="older-releases-container" class="hidden">
+                                ${releases.slice(1).map(formatReleaseHTML).join("")}
+                            </div>`;
+                    } else {
+                        document.getElementById("older-releases").innerHTML = "<p>No older releases available.</p>";
+                    }
+                })
+                .catch(error => {
+                    document.getElementById("latest-release").innerText = "Failed to load releases.";
+                });
+        }
+
+        function formatReleaseHTML(release) {
+            const publishedDate = new Date(release.published_at).toLocaleDateString();
+            const relativeTime = dateFns.formatDistanceToNow(new Date(release.published_at), { addSuffix: true });
+
+            return `<div class="release">
+                <div class="release-date">${publishedDate} (${relativeTime})</div>
+                <div class="markdown-content">${marked.parse(release.body || "No description available.")}</div>
+                <div class="assets">
+                    <h4>Assets:</h4>
+                    <ul>
+                        ${release.assets.length > 0 ? release.assets.map(asset => `<li><a href="${asset.browser_download_url}" target="_blank">${asset.name}</a></li>`).join("") : "<li>No assets available.</li>"}
+                    </ul>
+                </div>
+            </div>`;
+        }
+
+        function toggleOlderReleases() {
+            const container = document.getElementById("older-releases-container");
+            const toggleText = document.querySelector(".expandable");
+
+            if (container.classList.contains("hidden")) {
+                container.classList.remove("hidden");
+                toggleText.innerText = "▲";
+            } else {
+                container.classList.add("hidden");
+                toggleText.innerText = "▼";
+            }
+        }
+
+        fetchReleases();
+    </script>
+
+</body>
+</html>
