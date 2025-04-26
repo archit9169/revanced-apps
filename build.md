@@ -1,8 +1,6 @@
-Google-Photos: 7.25.0.747549628  
-YouTube: 20.07.39  
-YouTube-Extended: 19.47.53  
+Google-Photos: 7.26.0.749619146  
+YouTube: 20.12.46  
 YouTube-Music: 8.05.51  
-YouTube-Music-Extended: 8.05.51  
 
 ## MicroG >> GmsCore:
 Install [Revanced GmsCore](https://github.com/ReVanced/GmsCore/releases/latest) for using google account with revanced google apps.
@@ -12,10 +10,9 @@ Install [Revanced GmsCore](https://github.com/ReVanced/GmsCore/releases/latest) 
 | Huawei         | [v0.3.1.4.240913](https://github.com/ReVanced/GmsCore/releases/download/v0.3.1.4.240913/app.revanced.android.gms-240913008-hw-signed.apk)    |  
 
 ## What's New:  
-CLI: inotia00/revanced-cli-5.0.1-all.jar  
-Patches: inotia00/patches-5.6.2.rvp  
-[Changelog](https://github.com/inotia00/revanced-patches/releases/tag/v5.6.2)
-
 CLI: j-hc/revanced-cli-5.0.0-all.jar  
-Patches: ReVanced/patches-5.20.1.rvp  
-[Changelog](https://github.com/ReVanced/revanced-patches/releases/tag/v5.20.1)  
+Patches: ReVanced/patches-5.21.0.rvp  
+[Changelog](https://github.com/ReVanced/revanced-patches/releases/tag/v5.21.0)  
+
+Skipped:  
+Patches: inotia00/patches-5.6.2.rvp    
