@@ -1,4 +1,4 @@
-Google-Photos: 7.29.0.757514586  
+Google-Photos: 7.31.0.763184430  
 YouTube: 20.12.46  
 YouTube-Music: 8.05.51  
 
@@ -11,8 +11,8 @@ Install [Revanced GmsCore](https://github.com/ReVanced/GmsCore/releases/latest) 
 
 ## What's New:  
 CLI: j-hc/revanced-cli-5.0.0-all.jar  
-Patches: ReVanced/patches-5.24.0.rvp  
-[Changelog](https://github.com/ReVanced/revanced-patches/releases/tag/v5.24.0)  
+Patches: ReVanced/patches-5.25.0.rvp  
+[Changelog](https://github.com/ReVanced/revanced-patches/releases/tag/v5.25.0)  
 
 Skipped:  
-Patches: inotia00/patches-5.6.2.rvp          
+Patches: inotia00/patches-5.6.2.rvp            
