@@ -1,0 +1,30 @@
+name: Repository Cleanup
+
+on:
+  schedule:
+    - cron: '0 0 1 * *'  # Runs on the first day of each month at midnight UTC
+  workflow_dispatch:  # Allows manual execution
+
+permissions:
+  contents: write
+  actions: write
+
+jobs:
+  cleanup:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Delete old workflow runs
+        uses: Mattraks/delete-workflow-runs@v2
+        with:
+          repository: ${{ github.repository }}
+          token: ${{ secrets.GITHUB_TOKEN }}
+          retain_days: 0  # Retain workflow runs for 3 days
+          keep_minimum_runs: 3
+
+      - name: Delete old releases and tags
+        uses: Nats-ji/delete-old-releases@v1.0.1
+        with:
+          token: ${{ secrets.GITHUB_TOKEN }}
+          keep-count: 3
+          remove-tags: true
+          keep-old-minor-releases: false
