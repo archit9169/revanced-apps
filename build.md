@@ -1,5 +1,5 @@
-Spotify: 9.0.76.1115  
 YouTube: 20.14.43  
+Spotify: 9.0.76.1115  
 Music: 8.10.52  
 
 ## MicroG >> GmsCore:
@@ -11,8 +11,8 @@ Install [Revanced GmsCore](https://github.com/ReVanced/GmsCore/releases/latest) 
 
 ## What's New:  
 CLI: j-hc/revanced-cli-5.0.0-all.jar  
-Patches: ReVanced/patches-5.43.0.rvp  
-[Changelog](https://github.com/ReVanced/revanced-patches/releases/tag/v5.43.0)  
+Patches: ReVanced/patches-5.43.1.rvp  
+[Changelog](https://github.com/ReVanced/revanced-patches/releases/tag/v5.43.1)  
 
 Skipped:  
-Patches: inotia00/patches-5.12.1.rvp      
+Patches: inotia00/patches-5.12.1.rvp        
