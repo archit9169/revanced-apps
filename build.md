@@ -1,5 +1,6 @@
 Music: 8.10.52  
 YouTube: 20.14.43  
+Google-Photos: 7.53.0.827222094  
 Spotify: 9.0.76.1115  
 
 ## MicroG >> GmsCore:
@@ -11,8 +12,8 @@ Install [Revanced GmsCore](https://github.com/ReVanced/GmsCore/releases/latest) 
 
 ## What's New:  
 CLI: j-hc/revanced-cli-5.0.0-all.jar  
-Patches: ReVanced/patches-5.45.0.rvp  
-[Changelog](https://github.com/ReVanced/revanced-patches/releases/tag/v5.45.0)  
+Patches: ReVanced/patches-5.46.0.rvp  
+[Changelog](https://github.com/ReVanced/revanced-patches/releases/tag/v5.46.0)  
 
 Skipped:  
-Patches: inotia00/patches-5.12.1.rvp            
+Patches: inotia00/patches-5.12.1.rvp              
